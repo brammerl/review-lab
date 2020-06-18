@@ -1,26 +1,23 @@
-const { getQuote } = require('../futurama');
+const { getCharacter, getManyChar } = require('../getCharacter');
 
-jest.mock('superagent', () => ({
-  get: () => {
-    return Promise.resolve({
-      body: {
-        'character': 'Leela',
-        'quote': 'After all this time, someone else who has one eye who isn\'t a clumsy carpenter\nor a kid with a bb gun.',
-        'image': 'https://res.cloudinary.com/dzxqhkyqd/image/upload/v1554904145/leela.png'
-      }
-    });
-  }
-}));
-
-
-describe('futurama api functions', () => {
-  it('can get quotes by amount of quotes', () => {
-    return getQuote('1')
+describe('rock and morty api tests', () => {
+  it('can get character by id', () => {
+    return getCharacter('1')
       .then(character => {
         expect(character).toEqual({
-          character: 'Leela',
-          quote: 'After all this time, someone else who has one eye who isn\'t a clumsy carpenter\nor a kid with a bb gun.'
+          name: 'Rick Sanchez',
+          species: 'Human',
+          gender: 'Male'
         });
       });
   });
+
+  it(`gets many characters by id`, () => {
+    const arr = [1, 2, 3];
+    return getManyChar(arr)
+      .then(results => {
+        expect(results).toEqual([{ gender: 'Male', name: 'Rick Sanchez', species: 'Human' }, { gender: 'Male', name: 'Morty Smith', species: 'Human' }, { gender: 'Female', name: 'Summer Smith', species: 'Human' }]);
+      });
+  });
 });
+
